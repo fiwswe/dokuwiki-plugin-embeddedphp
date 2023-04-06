@@ -1,0 +1,7 @@
+base   embeddedphp
+author fiwswe
+email  dwplugin@fwml.de
+date   2023-04-06
+name   Embedded PHP Plugin
+desc   Allows embedding PHP code on wiki pages
+url    https://www.dokuwiki.org/plugin:embeddedphp
