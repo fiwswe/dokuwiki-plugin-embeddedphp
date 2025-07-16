@@ -2,7 +2,7 @@
 /**
  * DokuWiki Plugin embeddedphp (Syntax Component)
  *
- * @license GPL 2 http://www.gnu.org/licenses/gpl-2.0.html
+ * @license MIT https://mit-license.org
  * @author	fiwswe <dwplugin@fwml.de>
  */
  
