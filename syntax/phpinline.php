@@ -18,6 +18,16 @@ class syntax_plugin_embeddedphp_phpinline extends \dokuwiki\Extension\SyntaxPlug
 		return 'php';
 	}
 
+	/**
+	 * Return the exit pattern as we need this more than once
+	 *
+	 * @return string
+	 */
+	protected function GetExitPattern(): string
+	{
+		return '</'.$this->GetTag().'>';
+	}
+
 	/** @inheritDoc */
 	public function getType()
 	{
@@ -52,7 +62,7 @@ class syntax_plugin_embeddedphp_phpinline extends \dokuwiki\Extension\SyntaxPlug
 	/** @inheritDoc */
 	public function connectTo($mode)
 	{
-		$p = '<'.$this->GetTag().'\b>(?=.*?</'.$this->GetTag().'>)';
+		$p = '<'.$this->GetTag().'\b>(?=.*?'.$this->GetExitPattern().')';
 		$m = $this->getPluginModeName();
 		$this->Lexer->addEntryPattern($p, $mode, $m);
 	}
@@ -60,9 +70,8 @@ class syntax_plugin_embeddedphp_phpinline extends \dokuwiki\Extension\SyntaxPlug
 	/** @inheritDoc */
 	public function postConnect()
 	{
-		$p = '</'.$this->GetTag().'>';
 		$m = $this->getPluginModeName();
-		$this->Lexer->addExitPattern($p, $m);
+		$this->Lexer->addExitPattern($this->GetExitPattern(), $m);
 	}
 
 	/** @inheritDoc */
