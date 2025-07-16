@@ -32,14 +32,21 @@ class syntax_plugin_embeddedphp_phpinline extends \dokuwiki\Extension\SyntaxPlug
 		return 179;
 	}
 
+
 	/*
 	 * Return the plugin Lexer mode
+	 * This works fine for most trivial cases. But some plugins
+	 * may need to override this method.
 	 *
 	 * @return string
 	 */
 	protected function getPluginModeName(): string
 	{
-		return 'plugin_'.$this->getPluginName().'_'.$this->getPluginComponent();
+		$x = ['plugin',
+			  $this->getPluginName(),
+			  $this->getPluginComponent()];	//	If component is empty it will be filtered later.
+
+		return implode('_', array_filter($x));
 	}
 
 	/** @inheritDoc */
