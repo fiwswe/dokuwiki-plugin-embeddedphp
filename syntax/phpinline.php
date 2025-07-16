@@ -98,8 +98,9 @@ class syntax_plugin_embeddedphp_phpinline extends \dokuwiki\Extension\SyntaxPlug
 	public function render($mode, Doku_Renderer $renderer, $data)
 	{
 		if ($mode === 'xhtml') {
-			if (is_array($data) && (count($data) > 1)) {
-				$this->php($data[1], $renderer);
+			if (is_array($data)) {
+				@[$state, $phpsource] = $data;
+				$this->php($phpsource, $renderer);
 
 				return true;
 			}
@@ -124,14 +125,14 @@ class syntax_plugin_embeddedphp_phpinline extends \dokuwiki\Extension\SyntaxPlug
 	/**
 	 * Execute PHP code if allowed
 	 *
-	 * @param  string $text				 PHP code that is either executed or printed
+	 * @param  string $phpsource		 PHP code that is either executed or printed
 	 * @param  Doku_Renderer $renderer	 Renderer used for output
 	 */
-	protected function php($text, Doku_Renderer $renderer): void
+	protected function php($phpsource, Doku_Renderer $renderer): void
 	{
 		if ($this->allowEmbedding()) {
 			ob_start();
-			eval($text);
+			eval($phpsource);
 			$o = ob_get_contents();
 			if (!empty($o)) {
 				if ($this->isBlockElement()) {
@@ -143,7 +144,7 @@ class syntax_plugin_embeddedphp_phpinline extends \dokuwiki\Extension\SyntaxPlug
 			ob_end_clean();
 		} else {
 			$wrapper = $this->isBlockElement() ? 'pre' : 'code';
-			$renderer->doc .= /*'###.get_class($this)'.*/p_xhtml_cached_geshi($text, 'php', $wrapper);
+			$renderer->doc .= /*'###.get_class($this)'.*/p_xhtml_cached_geshi($phpsource, 'php', $wrapper);
 		}
 	}
 
