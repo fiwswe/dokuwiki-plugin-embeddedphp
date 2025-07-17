@@ -15,6 +15,12 @@ class syntax_plugin_embeddedphp_phpblock extends syntax_plugin_embeddedphp_phpin
 	}
 
 	/** @inheritDoc */
+	public function getPType()
+	{
+		return 'block';
+	}
+
+	/** @inheritDoc */
 	protected function isBlockElement(): bool
 	{
 		return true;
