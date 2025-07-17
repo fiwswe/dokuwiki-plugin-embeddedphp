@@ -71,7 +71,7 @@ class syntax_plugin_embeddedphp_phpinline extends \dokuwiki\Extension\SyntaxPlug
 	public function postConnect()
 	{
 		$m = $this->getPluginModeName();
-		$this->Lexer->addExitPattern($this->GetExitPattern(), $m);
+		$this->Lexer->addExitPattern('.*?'.$this->GetExitPattern(), $m);
 	}
 
 	/** @inheritDoc */
@@ -86,9 +86,8 @@ class syntax_plugin_embeddedphp_phpinline extends \dokuwiki\Extension\SyntaxPlug
 		}
 
 		switch($state) {
-			case DOKU_LEXER_UNMATCHED :
-				// Return the data needed in $this->render() as an array:
-				return [$state, $match];
+			case DOKU_LEXER_EXIT:
+				return [$state, substr($match, 0, -strlen($this->GetExitPattern()))];
 		}
 
 		return false;
@@ -100,9 +99,12 @@ class syntax_plugin_embeddedphp_phpinline extends \dokuwiki\Extension\SyntaxPlug
 		if ($mode === 'xhtml') {
 			if (is_array($data)) {
 				@[$state, $phpsource] = $data;
-				$this->php($phpsource, $renderer);
+				switch($state) {
+					case DOKU_LEXER_EXIT:
+						$this->php($phpsource, $renderer);
 
-				return true;
+						return true;
+				}
 			}
 		}
 
